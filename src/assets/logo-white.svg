@@ -1,0 +1,6 @@
+<svg width="150" height="100" viewBox="0 0 150 100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="30" cy="50" r="26" fill="none" stroke="#D4A94A" stroke-width="1.5"/>
+  <text x="30" y="59" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="24" fill="#D4A94A" text-anchor="middle">A</text>
+  <text x="66" y="45" font-family="Georgia, 'Times New Roman', serif" font-size="26" fill="#FFFFFF">Aveline</text>
+  <text x="66" y="70" font-family="Georgia, 'Times New Roman', serif" font-size="18" letter-spacing="4" fill="#D4A94A">STAYS</text>
+</svg>

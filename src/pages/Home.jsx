@@ -69,23 +69,57 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-forest-800 text-ivory">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(212,180,131,.35),transparent_55%),radial-gradient(ellipse_at_10%_90%,rgba(59,85,71,.8),transparent_60%)]" />
-          <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMax slice" className="absolute inset-x-0 bottom-0 h-3/4 w-full opacity-90">
-            <path d="M0 520 Q 240 380 480 470 T 960 430 T 1440 480 V800 H0Z" fill="#223A31" />
-            <path d="M0 600 Q 300 480 560 560 T 1100 540 T 1440 590 V800 H0Z" fill="#1A2D26" />
-            <path d="M0 690 Q 360 610 700 670 T 1440 660 V800 H0Z" fill="#111E19" />
-          </svg>
-          <div className="grain absolute inset-0" />
-        </div>
-        <div className="container-x pb-20 pt-36 text-center">
-          <Reveal><p className="eyebrow !text-brass-light">Boutique stays across India</p></Reveal>
-          <Reveal delay={0.1}><h1 className="h-display mx-auto mt-6 max-w-4xl text-6xl sm:text-7xl lg:text-8xl">Stay somewhere <span className="italic text-brass-light">you'll remember.</span></h1></Reveal>
-          <Reveal delay={0.2}><p className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-ivory/75">Villas, heritage havelis and hillside retreats — handpicked for character and quietly looked after by people who care.</p></Reveal>
-          <Reveal delay={0.3}><SearchBar /></Reveal>
-        </div>
-      </section>
+     {/* HERO */}
+<section className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-forest-800 text-ivory">
+
+  {/* Background Image */}
+  <div
+    className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: "url('/av_hero1.jpg')",
+    }}
+  />
+
+  {/* Dark Overlay */}
+  <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/50 via-forest-900/50 to-black/75" />
+
+  {/* Subtle Green Tint */}
+  <div className="absolute inset-0 z-0 bg-forest-900/20" />
+
+  {/* Grain Texture */}
+  <div className="grain pointer-events-none absolute inset-0 z-0" />
+
+  {/* Hero Content */}
+  <div className="container-x relative z-10 pb-20 pt-36 text-center">
+
+    <Reveal>
+      <p className="eyebrow !text-brass-light">
+        Boutique stays across India
+      </p>
+    </Reveal>
+
+    <Reveal delay={0.1}>
+      <h1 className="h-display mx-auto mt-6 max-w-4xl text-6xl sm:text-7xl lg:text-8xl">
+        Stay somewhere{" "}
+        <span className="italic text-brass-light">
+          you'll remember.
+        </span>
+      </h1>
+    </Reveal>
+
+    <Reveal delay={0.2}>
+      <p className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-ivory/90">
+        Villas, heritage havelis and hillside retreats — handpicked
+        for character and quietly looked after by people who care.
+      </p>
+    </Reveal>
+
+    <Reveal delay={0.3}>
+      <SearchBar />
+    </Reveal>
+
+  </div>
+</section>
 
       {/* STATS STRIP */}
       <section className="border-b border-ink/10 bg-sand/60">

@@ -6,24 +6,25 @@ import { fileToDataUrl, money } from "../../lib/format";
 import { Modal } from "../../components/Ui";
 import HotelArt from "../../components/HotelArt";
 import { useStays } from "../../context/StaysContext";
-import { PageHead } from "./Dashboard";
+import { asList, EmptyState, PageHead } from "./AdminUi";
 
 const COMMON = ["Free Wi-Fi", "Breakfast Included", "Spa", "Pool", "Pet Friendly", "Parking", "Gym", "Restaurant", "Bar", "Airport Transfer"];
 const blank = { name: "", city: "", location: "", landmarks: "", description: "", price: "", amenities: [], roomTypes: "Deluxe, Suite", lat: "", lng: "", images: [] };
 
 export default function StaysAdmin() {
-  const { stays, reload, loading } = useStays();
+  const { stays: rawStays, reload, loading } = useStays();
+  const stays = asList(rawStays);
   const [form, setForm] = useState(null);
   const [busy, setBusy] = useState(false);
   const [custom, setCustom] = useState("");
   const on = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
-  const edit = (h) => setForm({ ...h, roomTypes: (h.roomTypes || []).join(", "), price: h.price, lat: h.lat || "", lng: h.lng || "" });
+  const edit = (h) => setForm({ ...blank, ...h, roomTypes: asList(h.roomTypes).join(", "), amenities: asList(h.amenities), images: asList(h.images), landmarks: h.landmarks || "", description: h.description || "", price: h.price ?? "", lat: h.lat || "", lng: h.lng || "" });
   const toggleAmenity = (a) => setForm((f) => ({ ...f, amenities: f.amenities.includes(a) ? f.amenities.filter((x) => x !== a) : [...f.amenities, a] }));
   const addCustom = () => { const a = custom.trim(); if (a && !form.amenities.includes(a)) setForm({ ...form, amenities: [...form.amenities, a] }); setCustom(""); };
   const addImages = async (files) => {
     try { const urls = await Promise.all([...files].slice(0, 6).map((f) => fileToDataUrl(f))); setForm((f) => ({ ...f, images: [...f.images, ...urls].slice(0, 8) })); }
-    catch { toast.error("Couldn't read that image."); }
+    catch { toast.error("Couldn't read that image. Try a JPG or PNG file."); }
   };
 
   const save = async (e) => {
@@ -35,7 +36,7 @@ export default function StaysAdmin() {
     } catch (err) { toast.error(err.message); } finally { setBusy(false); }
   };
   const remove = async (h) => {
-    if (!window.confirm(`Remove “${h.name}”? Existing bookings are kept.`)) return;
+    if (!window.confirm(`Remove "${h.name}"? Existing bookings are kept.`)) return;
     try { await api(`/hotels/${h.id}`, { method: "DELETE" }); toast.success("Stay removed"); reload(); } catch (e) { toast.error(e.message); }
   };
 
@@ -43,10 +44,10 @@ export default function StaysAdmin() {
     <div>
       <PageHead title="Stays" sub={`${stays.length} properties listed`} action={<button onClick={() => setForm({ ...blank })} className="btn-primary"><FiPlus /> Add stay</button>} />
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        {loading ? [0, 1, 2].map((i) => <div key={i} className="skeleton h-80 rounded-3xl" />) : stays.map((h) => (
+        {loading ? [0, 1, 2].map((i) => <div key={i} className="skeleton h-80 rounded-3xl" />) : stays.length === 0 ? <div className="card sm:col-span-2 xl:col-span-3"><EmptyState title="No stays listed" text="Add a stay to make it bookable on the website." /></div> : stays.map((h) => (
           <div key={h.id} className="card overflow-hidden"><div className="aspect-[16/10]"><HotelArt hotel={h} /></div>
-            <div className="p-6"><p className="text-xs font-bold uppercase tracking-[0.18em] text-brass">{h.city}</p><h3 className="mt-1 font-display text-2xl">{h.name}</h3>
-              <p className="mt-2 text-sm text-mist">{money(h.price)} / night · ★ {h.rating} · {(h.images || []).length} photo{(h.images || []).length !== 1 ? "s" : ""}</p>
+            <div className="p-6"><p className="text-sm font-semibold text-brass-dark">{h.city}</p><h3 className="mt-1 font-display text-2xl">{h.name}</h3>
+              <p className="mt-2 text-sm text-mist">{money(h.price)} a night, rated {Number(h.rating || 0).toFixed(1)}, {asList(h.images).length} photo{asList(h.images).length !== 1 ? "s" : ""}</p>
               <div className="mt-5 flex gap-2"><button onClick={() => edit(h)} className="btn-ghost flex-1 !py-2.5"><FiEdit2 /> Edit</button><button onClick={() => remove(h)} className="btn !border !border-rose-200 !px-4 !py-2.5 text-rose-700 hover:bg-rose-50" aria-label="Delete"><FiTrash2 /></button></div></div></div>))}
       </div>
       <Modal wide open={!!form} onClose={() => setForm(null)} title={form?.id ? "Edit stay" : "Add a stay"}>
